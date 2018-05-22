@@ -1,5 +1,4 @@
 import ipyvolume as ipv
-from ipyvolume.pylab import style
 
 
 def plot_brain_mesh(rh_vertices=None,
@@ -64,7 +63,10 @@ def plot_brain_mesh(rh_vertices=None,
     if (lh_vertices is not None) and (lh_faces is not None):
         lh_mesh = plot_hemisphere_mesh(lh_vertices, lh_faces, lh_color)
 
-    style.use('minimal')
+    ipv.style.box_off()
+    ipv.style.axes_off()
+    ipv.style.background_color('black')
+    
     ipv.view(azimuth, elevation)
     ipv.squarelim()
     ipv.show()
