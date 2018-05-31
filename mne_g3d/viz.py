@@ -1,6 +1,7 @@
 import ipyvolume as ipv
 from pythreejs import BlendFactors, BlendingMode, Equations
 from pythreejs import Side, ShaderMaterial
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -123,9 +124,10 @@ def plot_hemisphere_mesh(vertices, faces,  color='grey', act_data=None):
     if act_data is not None:
         # transform into color
         act_data -= act_data.min()
-        act_data /= act_data.max()
+        act_data /= act_data.max() / 2.
         act_data[act_data > 1.] = 1.
-        act_colors = cmap(act_data.ravel())[:, :3]
+        act_colors = cmap(act_data.ravel())
+        act_colors[:, 3] = np.minimum(act_colors[:, :3].mean(-1) + 0.5, 1.)
 
         mesh_overlay = ipv.plot_trisurf(x,
                                         y,
@@ -137,12 +139,11 @@ def plot_hemisphere_mesh(vertices, faces,  color='grey', act_data=None):
         mat = ShaderMaterial()
         mat.alphaTest = 0.1
         mat.blending = BlendingMode.CustomBlending
-        mat.blendDst = BlendFactors.OneFactor
+        mat.blendDst = BlendFactors.OneMinusSrcAlphaFactor
         mat.blendEquation = Equations.AddEquation
-        mat.blendSrc = BlendFactors.SrcColorFactor
+        mat.blendSrc = BlendFactors.SrcAlphaFactor
         mat.transparent = True
         mat.side = Side.DoubleSide
-
         mesh_overlay.material = mat
 
     return mesh_widget, mesh_overlay
