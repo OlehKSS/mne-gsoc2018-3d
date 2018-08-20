@@ -519,7 +519,7 @@ class Brain(object):
         mat.blending = BlendingMode.CustomBlending
         mat.blendDst = BlendFactors.OneMinusSrcAlphaFactor
         mat.blendEquation = Equations.AddEquation
-        mat.blendSrc = BlendFactors.SrcAlphaFactor
+        mat.blendSrc = BlendFactors.OneFactor
         mat.transparent = True
         mat.side = Side.DoubleSide
 
